@@ -10,14 +10,18 @@ namespace BetaMinecraft.Core
         {
             Title = "Minecraft",
             WindowState = WindowState.Maximized,
-            ClientSize = (1200, 800)
+            ClientSize = (1200, 800),
+            Vsync = VSyncMode.On
         })
     {
         protected override void OnLoad()
         {
             base.OnLoad();
 
-            GL.ClearColor(Color4.Black);
+            GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
+            GL.ClearColor(Color4.Blue);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
@@ -32,6 +36,12 @@ namespace BetaMinecraft.Core
         protected override void OnRenderFrame(FrameEventArgs args)
         {
             base.OnRenderFrame(args);
+        }
+
+        protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
+        {
+            base.OnFramebufferResize(e);
+            GL.Viewport(0, 0, e.Width, e.Height);
         }
     }
 }
