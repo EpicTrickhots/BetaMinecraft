@@ -52,6 +52,7 @@ namespace Minecraft.Generator
         public void Initialize()
         {
             Generator.CreateGpuResources();
+            CalculateNeededChunks();
         }
 
         public void Update()
