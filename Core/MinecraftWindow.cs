@@ -76,8 +76,14 @@ namespace Minecraft.Core
 
         private void CreateApplicationResources()
         {
-            Shader terrainShader = Shader.Load(Path.Combine(AppContext.BaseDirectory, @"Datafiles\Shaders"), "terrain");
+            string shaderDir = Path.Combine(AppContext.BaseDirectory, @"Datafiles\Shaders");
+            string textureDir = Path.Combine(AppContext.BaseDirectory, @"Datafiles\Textures");
+
+            Shader terrainShader = Shader.Load(shaderDir, "terrain");
             Resources.shaders.Add("terrain", terrainShader);
+
+            Texture grass = Texture.Load(Path.Combine(textureDir, "grass.png"));
+            Resources.textures.Add("grass", grass);
         }
     }
 }

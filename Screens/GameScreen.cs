@@ -38,6 +38,8 @@ namespace Minecraft.Screens
                 camera.farPlaneDistance
             );
 
+            Resources.textures["grass"].Use(TextureUnit.Texture0);
+
             Shader shader = Resources.shaders["terrain"];
             shader.Use();
 
