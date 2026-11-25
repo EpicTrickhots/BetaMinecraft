@@ -51,7 +51,7 @@ namespace Minecraft.Generator
 
         public void Initialize()
         {
-            Generator.CreateGpuResources();
+            Generator.CreateResources();
             CalculateNeededChunks();
         }
 
@@ -69,7 +69,7 @@ namespace Minecraft.Generator
 
         public void CleanUp()
         {
-            Generator.ReleaseGpuResources();
+            Generator.ReleaseResources();
         }
 
         private void CreateChunk(Vector3i coordinate)

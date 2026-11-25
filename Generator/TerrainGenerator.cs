@@ -11,12 +11,12 @@ namespace Minecraft.Generator
         /// <summary>
         /// Creates GPU buffers to be used for each chunk
         /// </summary>
-        public abstract void CreateGpuResources();
+        public abstract void CreateResources();
 
         /// <summary>
         /// Releases our GPU buffers to avoid memory leaks
         /// </summary>
-        public abstract void ReleaseGpuResources();
+        public abstract void ReleaseResources();
 
         /// <summary>
         /// Generates a chunk at a given chunk coordinate

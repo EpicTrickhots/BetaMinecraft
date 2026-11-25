@@ -33,14 +33,12 @@ namespace Minecraft.Generator
 
                     index += 4;
                 }
-
-                // index += 4;
             }
 
             chunk.mesh = new Mesh(vertices, indices);
         }
 
-        public override void CreateGpuResources()
+        public override void CreateResources()
         {
             for (uint i = 0; i < NUM_QUADS; i++)
             {
@@ -56,7 +54,7 @@ namespace Minecraft.Generator
             }
         }
 
-        public override void ReleaseGpuResources()
+        public override void ReleaseResources()
         {
             
         }
