@@ -1,8 +1,11 @@
-﻿using OpenTK.Windowing.Desktop;
+﻿using System;
+using System.IO;
+using Minecraft.Screens;
+using Minecraft.Graphics;
+using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using Minecraft.Screens;
 
 namespace Minecraft.Core
 {
@@ -30,6 +33,7 @@ namespace Minecraft.Core
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
 
+            CreateApplicationResources();
             screen.Start();
         }
 
@@ -61,6 +65,12 @@ namespace Minecraft.Core
         private void UpdateAspect()
         {
             ViewportAspect = FramebufferSize.Y > 0 ? FramebufferSize.X / (float)FramebufferSize.Y : 1f;
+        }
+
+        private void CreateApplicationResources()
+        {
+            Shader terrainShader = Shader.Load(Path.Combine(AppContext.BaseDirectory, @"Datafiles\Shaders"), "terrain");
+            Resources.shaders.Add("terrain", terrainShader);
         }
     }
 }
