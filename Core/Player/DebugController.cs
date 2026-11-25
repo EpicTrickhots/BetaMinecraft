@@ -1,4 +1,5 @@
 ﻿using Minecraft.InputHandling;
+using Minecraft.Runtime;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using System;
@@ -35,7 +36,7 @@ namespace Minecraft.Core.Player
             float u = Input.GetKey(Keys.Space) ? 1f : 0f;
             float d = Input.GetKey(Keys.LeftShift) ? 1f : 0f;
 
-            Vector3 movement = Right * moveDelta.X + Forward * moveDelta.y + Vector3.UnitY * (u - d);
+            Vector3 movement = Right * moveDelta.X + Forward * moveDelta.Y + Vector3.UnitY * (u - d);
             localPosition += movement * Time.deltaTime * MOVE_SPEED;
         }
 

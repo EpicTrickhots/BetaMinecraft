@@ -25,6 +25,7 @@ namespace Minecraft.Screens
         {
             generator.viewPosition = controller.Position;
             generator.Update();
+            controller.Update();
         }
 
         public void RenderFrame()
