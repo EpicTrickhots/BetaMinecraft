@@ -6,7 +6,7 @@ namespace BetaMinecraft.Generator
     {
         protected const int THREAD_GROUP_SIZE = 8;
 
-        protected const int CHUNK_SIZE = 16;
+        public const int CHUNK_SIZE = 16;
 
         /// <summary>
         /// Creates GPU buffers to be used for each chunk
