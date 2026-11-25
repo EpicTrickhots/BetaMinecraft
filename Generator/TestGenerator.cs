@@ -34,7 +34,7 @@ namespace Minecraft.Generator
                     index += 4;
                 }
 
-                index += 4;
+                // index += 4;
             }
 
             chunk.mesh = new Mesh(vertices, indices);

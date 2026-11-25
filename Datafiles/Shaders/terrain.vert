@@ -5,12 +5,11 @@ layout(location = 2) in vec2 TEXCOORD0;
 
 out vec2 uv;
 
-uniform mat4 uView;
-uniform mat4 uProj;
+uniform mat4 uTransformation;
 
 void main()
 {
 	uv = TEXCOORD0;
 
-	gl_Position = vec4(POSITION, 1.0) * uView * uProj;
+	gl_Position = vec4(POSITION, 1.0) * uTransformation;
 }

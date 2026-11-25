@@ -4,6 +4,7 @@ using Minecraft.Generator;
 using Minecraft.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using System;
 
 namespace Minecraft.Screens
 {
@@ -13,9 +14,7 @@ namespace Minecraft.Screens
 
         PlayerController controller = new DebugController();
 
-        private static Matrix4 currentCameraViewMatrix;
-
-        private static Matrix4 currentCameraProjectionMatrix;
+        private static Matrix4 currentTransformationMatrix;
 
         public void Start()
         {
@@ -31,8 +30,7 @@ namespace Minecraft.Screens
         public void RenderFrame()
         {
             Camera camera = controller.camera;
-            currentCameraProjectionMatrix = camera.ViewMatrix;
-            currentCameraProjectionMatrix = Matrix4.CreatePerspectiveFieldOfView(
+            currentTransformationMatrix = camera.ViewMatrix * Matrix4.CreatePerspectiveFieldOfView(
                 camera.fieldOfView * MathHelper.DegToRad,
                 MinecraftWindow.ViewportAspect,
                 camera.nearPlaneDistance,
@@ -42,8 +40,7 @@ namespace Minecraft.Screens
             Shader shader = Resources.shaders["terrain"];
             shader.Use();
 
-            GL.UniformMatrix4(shader.uniformLocations["uView"], true, ref currentCameraViewMatrix);
-            GL.UniformMatrix4(shader.uniformLocations["uProj"], true, ref currentCameraProjectionMatrix);
+            GL.UniformMatrix4(shader.uniformLocations["uTransformation"], true, ref currentTransformationMatrix);
 
             foreach(Vector3i c in generator.renderedChunks)
             {
