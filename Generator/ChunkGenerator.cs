@@ -56,7 +56,11 @@ namespace BetaMinecraft.Generator
 
         private void CreateChunk(Vector3i coordinate)
         {
-            Chunk chunk = new();
+            Chunk chunk = new(coordinate);
+            Generator.GenerateChunkMesh(chunk);
+
+            cachedChunks.Add(coordinate, chunk);
+            renderedChunks.Add(coordinate);
         }
     }
 }
