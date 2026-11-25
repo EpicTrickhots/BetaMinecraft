@@ -35,17 +35,17 @@ namespace Minecraft.Generator
         /// <summary>
         /// All chunks that have been generated, active or not
         /// </summary>
-        private readonly Dictionary<Vector3i, Chunk> cachedChunks = [];
+        public readonly Dictionary<Vector3i, Chunk> cachedChunks = [];
 
         /// <summary>
         /// Chunks that have been generated, and are currently rendered
         /// </summary>
-        private readonly List<Vector3i> renderedChunks = [];
+        public readonly List<Vector3i> renderedChunks = [];
 
         /// <summary>
         /// Chunks that are queued for rendering/generation
         /// </summary>
-        private readonly Queue<Vector3i> queuedChunks = [];
+        public readonly Queue<Vector3i> queuedChunks = [];
 
         //private Stopwatch debugTimer;
 

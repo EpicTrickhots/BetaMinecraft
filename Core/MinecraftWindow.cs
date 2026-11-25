@@ -17,9 +17,13 @@ namespace Minecraft.Core
     {
         public readonly IScreen screen = new GameScreen();
 
+        public static float ViewportAspect { get; private set; }
+
         protected override void OnLoad()
         {
             base.OnLoad();
+
+            UpdateAspect();
 
             GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
             GL.ClearColor(Color4.Black);
@@ -51,6 +55,12 @@ namespace Minecraft.Core
         {
             base.OnFramebufferResize(e);
             GL.Viewport(0, 0, e.Width, e.Height);
+            UpdateAspect();
+        }
+
+        private void UpdateAspect()
+        {
+            ViewportAspect = FramebufferSize.Y > 0 ? FramebufferSize.X / (float)FramebufferSize.Y : 1f;
         }
     }
 }
