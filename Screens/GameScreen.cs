@@ -45,9 +45,16 @@ namespace Minecraft.Screens
             GL.UniformMatrix4(shader.uniformLocations["uView"], true, ref currentCameraViewMatrix);
             GL.UniformMatrix4(shader.uniformLocations["uProj"], true, ref currentCameraProjectionMatrix);
 
-            foreach(Chunk c in generator.renderedChunks)
+            foreach(Vector3i c in generator.renderedChunks)
             {
+                if(generator.cachedChunks.TryGetValue(c, out Chunk? chunk))
+                {
+                    if (chunk.mesh == null)
+                        return;
 
+                    GL.BindVertexArray(chunk.mesh.VertexArrayObject);
+                    GL.DrawElements(PrimitiveType.Triangles, chunk.mesh.indices.Length, DrawElementsType.UnsignedInt, 0);
+                }
             }
         }
     }
