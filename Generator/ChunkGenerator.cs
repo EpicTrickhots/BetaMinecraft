@@ -47,7 +47,7 @@ namespace BetaMinecraft.Generator
         /// </summary>
         private readonly Queue<Vector3i> queuedChunks = [];
 
-        private Stopwatch debugTimer;
+        //private Stopwatch debugTimer;
 
         public void Initialize()
         {
@@ -81,7 +81,7 @@ namespace BetaMinecraft.Generator
 
                 if (cachedChunks.ContainsKey(chunk))
                 {
-                    cachedChunks[chunk].Toggle(true);
+                    cachedChunks[chunk].IsActive = true;
                     renderedChunks.Add(chunk);
                 }
                 else
@@ -120,7 +120,7 @@ namespace BetaMinecraft.Generator
             for(int i = 0; i < renderedChunks.Count; i++)
             {
                 if (!tempChunks.Contains(renderedChunks[i]))
-                    cachedChunks[renderedChunks[i]].Toggle(false);
+                    cachedChunks[renderedChunks[i]].IsActive = false;
             }
 
             renderedChunks.RemoveAll(c => !tempChunks.Contains(c));

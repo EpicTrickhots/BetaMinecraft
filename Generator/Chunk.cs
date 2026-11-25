@@ -1,14 +1,23 @@
-﻿using OpenTK.Mathematics;
+﻿using BetaMinecraft.Graphics;
+using OpenTK.Mathematics;
 
 namespace BetaMinecraft.Generator
 {
     public class Chunk(Vector3i coordinate)
     {
+        /// <summary>
+        /// Chunk-space coordinate of this chunk
+        /// </summary>
         public Vector3i coordinate = coordinate;
 
-        public void Toggle(bool on)
-        {
+        /// <summary>
+        /// Mesh data that will be written to by the mesh generators
+        /// </summary>
+        public Mesh? mesh;
 
-        }
+        /// <summary>
+        /// When false, this chunk will be skipped in the render loop
+        /// </summary>
+        public bool IsActive { get; set; } = true;
     }
 }
