@@ -54,6 +54,18 @@ namespace BetaMinecraft.Generator
             Generator.CreateGpuResources();
         }
 
+        public void Update()
+        {
+            Vector3i cc = TerrainGenerator.WorldToChunkCoordinate(viewer);
+            if(cc != viewerChunk)
+            {
+                viewerChunk = cc;
+                CalculateNeededChunks();
+            }
+
+            RequestChunkUpdate();
+        }
+
         public void CleanUp()
         {
             Generator.ReleaseGpuResources();
