@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Minecraft.Core.Player
 {
-    public class DebugController : IController
+    public class DebugController : PlayerController
     {
 
     }
