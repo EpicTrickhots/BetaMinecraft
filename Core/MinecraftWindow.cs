@@ -1,11 +1,12 @@
-﻿using System;
-using System.IO;
-using Minecraft.Screens;
+﻿using Minecraft..InputHandling;
 using Minecraft.Graphics;
-using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.Common;
+using Minecraft.Screens;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
+using System;
+using System.IO;
 
 namespace Minecraft.Core
 {
@@ -41,6 +42,8 @@ namespace Minecraft.Core
         {
             base.OnUpdateFrame(args);
 
+            Input.keyboard = KeyboardState;
+            Input.mouse = MouseState;
             screen.Update();
         }
 

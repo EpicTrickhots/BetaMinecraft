@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 #nullable disable
 
-namespace Kralt.Framework.InputHandling;
+namespace Minecraft.InputHandling;
 
 public static class Input
 {
