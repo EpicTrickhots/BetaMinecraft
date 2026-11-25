@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OpenTK.Mathematics;
 
 namespace BetaMinecraft.Generator
 {
-    public class Chunk
+    public class Chunk(Vector3i coordinate)
     {
-
+        public Vector3i coordinate = coordinate;
     }
 }

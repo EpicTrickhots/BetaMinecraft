@@ -1,10 +1,7 @@
-﻿using OpenTK.Mathematics;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using OpenTK.Mathematics;
 
 namespace BetaMinecraft.Generator
 {
@@ -33,7 +30,7 @@ namespace BetaMinecraft.Generator
         /// <summary>
         /// All chunks that have been generated, active or not
         /// </summary>
-        private readonly Dictionary<Vector3i, Chunk> chachedChunks = [];
+        private readonly Dictionary<Vector3i, Chunk> cachedChunks = [];
 
         /// <summary>
         /// Chunks that have been generated, and are currently rendered
@@ -49,7 +46,17 @@ namespace BetaMinecraft.Generator
 
         public void Initialize()
         {
-            
+            Generator.CreateGpuResources();
+        }
+
+        public void CleanUp()
+        {
+            Generator.ReleaseGpuResources();
+        }
+
+        private void CreateChunk(Vector3i coordinate)
+        {
+            Chunk chunk = new();
         }
     }
 }
