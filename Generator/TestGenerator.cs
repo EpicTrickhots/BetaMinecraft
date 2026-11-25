@@ -21,15 +21,15 @@ namespace Minecraft.Generator
             {
                 for(int z = 0; z < CHUNK_SIZE - 1; z++)
                 {
-                    Vertex v1 = new Vertex(x, 0f, z + 1, 0f, 1f);
-                    Vertex v2 = new Vertex(x + 1, 0f, z + 1, 1f, 1f);
-                    Vertex v3 = new Vertex(x + 1, 0f, z, 1f, 0f);
-                    Vertex v4 = new Vertex(x, 0f, z, 0f, 0f);
+                    Vector3 v1 = new Vector3(x, 0f, z + 1) + offset;
+                    Vector3 v2 = new Vector3(x + 1, 0f, z + 1) + offset;
+                    Vector3 v3 = new Vector3(x + 1, 0f, z) + offset;
+                    Vector3 v4 = new Vector3(x, 0f, z) + offset;
 
-                    vertices[index] = v1;
-                    vertices[index + 1] = v2;
-                    vertices[index + 2] = v3;
-                    vertices[index + 3] = v4;
+                    vertices[index] = new Vertex(v1, new(0f, 1f));
+                    vertices[index + 1] = new Vertex(v2, new(1f, 1f));
+                    vertices[index + 2] = new Vertex(v3, new(1f, 0f));
+                    vertices[index + 3] = new Vertex(v4, new(0f, 0f));
 
                     index += 4;
                 }
