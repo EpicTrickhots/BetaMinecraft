@@ -81,7 +81,7 @@ namespace BetaMinecraft.Generator
 
                 if (cachedChunks.ContainsKey(chunk))
                 {
-                    // Toggle chunk back on
+                    cachedChunks[chunk].Toggle(true);
                     renderedChunks.Add(chunk);
                 }
                 else
@@ -115,6 +115,35 @@ namespace BetaMinecraft.Generator
 
                     tempChunks.Add(coordinate);
                 }
+            }
+
+            for(int i = 0; i < renderedChunks.Count; i++)
+            {
+                if (!tempChunks.Contains(renderedChunks[i]))
+                    cachedChunks[renderedChunks[i]].Toggle(false);
+            }
+
+            renderedChunks.RemoveAll(c => !tempChunks.Contains(c));
+            BuildChunkQueue(tempChunks);
+        }
+
+        private void BuildChunkQueue(List<Vector3i> temp)
+        {
+            // Sort chunk queue by distance to viewer so closer chunks are rendered first
+            temp.Sort((a, b) =>
+            {
+                Vector3 ac = TerrainGenerator.ChunkToWorldCoordinate(a) + 0.5f * TerrainGenerator.CHUNK_SIZE * Vector3.One;
+                Vector3 bc = TerrainGenerator.ChunkToWorldCoordinate(b) + 0.5f * TerrainGenerator.CHUNK_SIZE * Vector3.One;
+
+                float distanceA = (ac - viewer).LengthSquared;
+                float distanceB = (bc - viewer).LengthSquared;
+
+                return distanceA.CompareTo(distanceB);
+            });
+
+            for(int i = 0; i < temp.Count; i++)
+            {
+                queuedChunks.Enqueue(temp[i]);
             }
         }
     }
