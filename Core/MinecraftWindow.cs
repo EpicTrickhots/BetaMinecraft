@@ -15,21 +15,25 @@ namespace Minecraft.Core
             Vsync = VSyncMode.On
         })
     {
-        public readonly IScreen[] screens = [ new GameScreen() ];
+        public readonly IScreen screen = new GameScreen();
 
         protected override void OnLoad()
         {
             base.OnLoad();
 
             GL.Viewport(0, 0, FramebufferSize.X, FramebufferSize.Y);
-            GL.ClearColor(Color4.Blue);
+            GL.ClearColor(Color4.Black);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
+
+            screen.Start();
         }
 
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
+
+            screen.Update();
         }
 
         protected override void OnRenderFrame(FrameEventArgs args)
@@ -37,6 +41,8 @@ namespace Minecraft.Core
             base.OnRenderFrame(args);
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            screen.RenderFrame();
 
             SwapBuffers();
         }

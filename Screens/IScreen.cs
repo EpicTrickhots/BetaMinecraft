@@ -8,6 +8,8 @@ namespace Minecraft.Screens
 {
     public interface IScreen
     {
-
+        public void Start();
+        public void Update();
+        public void RenderFrame();
     }
 }

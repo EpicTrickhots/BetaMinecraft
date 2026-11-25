@@ -93,7 +93,6 @@ namespace Minecraft.Generator
 
                 if (cachedChunks.ContainsKey(chunk))
                 {
-                    cachedChunks[chunk].IsActive = true;
                     renderedChunks.Add(chunk);
                 }
                 else
@@ -129,11 +128,13 @@ namespace Minecraft.Generator
                 }
             }
 
+            /*
             for(int i = 0; i < renderedChunks.Count; i++)
             {
                 if (!tempChunks.Contains(renderedChunks[i]))
                     cachedChunks[renderedChunks[i]].IsActive = false;
             }
+            */
 
             renderedChunks.RemoveAll(c => !tempChunks.Contains(c));
             BuildChunkQueue(tempChunks);

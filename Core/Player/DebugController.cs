@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Minecraft.Core
+namespace Minecraft.Core.Player
 {
-    internal static class Settings
+    internal class DebugController
     {
-
     }
 }

@@ -14,10 +14,5 @@ namespace Minecraft.Generator
         /// Mesh data that will be written to by the mesh generators
         /// </summary>
         public Mesh? mesh;
-
-        /// <summary>
-        /// When false, this chunk will be skipped in the render loop
-        /// </summary>
-        public bool IsActive { get; set; } = true;
     }
 }
