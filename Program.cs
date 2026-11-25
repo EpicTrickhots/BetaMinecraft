@@ -1,6 +1,6 @@
-﻿using BetaMinecraft.Core;
+﻿using Minecraft.Core;
 
-namespace BetaMinecraft
+namespace Minecraft
 {
     internal class Program
     {

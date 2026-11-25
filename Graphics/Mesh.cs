@@ -1,7 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL4;
 using System.Runtime.CompilerServices;
 
-namespace BetaMinecraft.Graphics
+namespace Minecraft.Graphics
 {
     public class Mesh
     {

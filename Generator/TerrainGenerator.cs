@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace BetaMinecraft.Generator
+namespace Minecraft.Generator
 {
     public abstract class TerrainGenerator
     {

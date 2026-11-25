@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace BetaMinecraft.Graphics
+namespace Minecraft.Graphics
 {
     public readonly struct Vertex
     {

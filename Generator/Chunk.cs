@@ -1,7 +1,7 @@
-﻿using BetaMinecraft.Graphics;
+﻿using Minecraft.Graphics;
 using OpenTK.Mathematics;
 
-namespace BetaMinecraft.Generator
+namespace Minecraft.Generator
 {
     public class Chunk(Vector3i coordinate)
     {

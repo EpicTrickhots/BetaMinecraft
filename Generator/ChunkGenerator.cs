@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using OpenTK.Mathematics;
 
-namespace BetaMinecraft.Generator
+namespace Minecraft.Generator
 {
     internal class ChunkGenerator(TerrainGenerator generator)
     {

@@ -2,8 +2,9 @@
 using OpenTK.Windowing.Common;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using Minecraft.Screens;
 
-namespace BetaMinecraft.Core
+namespace Minecraft.Core
 {
     internal class MinecraftWindow() 
         : GameWindow(GameWindowSettings.Default, new NativeWindowSettings()
@@ -14,6 +15,8 @@ namespace BetaMinecraft.Core
             Vsync = VSyncMode.On
         })
     {
+        public readonly IScreen[] screens = [ new GameScreen() ];
+
         protected override void OnLoad()
         {
             base.OnLoad();
@@ -27,15 +30,15 @@ namespace BetaMinecraft.Core
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
-
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-            SwapBuffers();
         }
 
         protected override void OnRenderFrame(FrameEventArgs args)
         {
             base.OnRenderFrame(args);
+
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+            SwapBuffers();
         }
 
         protected override void OnFramebufferResize(FramebufferResizeEventArgs e)
