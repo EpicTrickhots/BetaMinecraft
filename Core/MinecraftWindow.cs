@@ -1,6 +1,7 @@
 ﻿using Minecraft.InputHandling;
 using Minecraft.Graphics;
 using Minecraft.Screens;
+using Minecraft.Runtime;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -41,6 +42,8 @@ namespace Minecraft.Core
         protected override void OnUpdateFrame(FrameEventArgs args)
         {
             base.OnUpdateFrame(args);
+
+            Time.UpdateTime((float)args.Time);
 
             Input.keyboard = KeyboardState;
             Input.mouse = MouseState;
