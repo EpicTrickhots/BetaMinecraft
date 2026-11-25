@@ -6,7 +6,9 @@ namespace Minecraft.Generator
     {
         protected const int THREAD_GROUP_SIZE = 8;
 
-        public const int CHUNK_SIZE = 16;
+        public const int CHUNK_WIDTH = 16;
+
+        public const int CHUNK_HEIGHT = 256;
 
         /// <summary>
         /// Creates GPU buffers to be used for each chunk
@@ -31,8 +33,8 @@ namespace Minecraft.Generator
         /// <returns>World-space position</returns>
         public static Vector3 ChunkToWorldCoordinate(Vector3i a)
         {
-            float x = a.X * (CHUNK_SIZE - 1);
-            float z = a.Z * (CHUNK_SIZE - 1);
+            float x = a.X * (CHUNK_WIDTH - 1);
+            float z = a.Z * (CHUNK_WIDTH - 1);
             return new Vector3(x, 0f, z);
         }
 
@@ -43,8 +45,8 @@ namespace Minecraft.Generator
         /// <returns>Chunk coordinate</returns>
         public static Vector3i WorldToChunkCoordinate(Vector3 a)
         {
-            int x = (int)MathHelper.Floor(a.X / CHUNK_SIZE);
-            int z = (int)MathHelper.Floor(a.Z / CHUNK_SIZE);
+            int x = (int)MathHelper.Floor(a.X / CHUNK_WIDTH);
+            int z = (int)MathHelper.Floor(a.Z / CHUNK_WIDTH);
             return new Vector3i(x, 0, z);
         }
     }

@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using Minecraft.Graphics;
 using OpenTK.Mathematics;
 
 namespace Minecraft.Generator
 {
-    public class TestGenerator : TerrainGenerator
+    public class VoxelTerrainGenerator : TerrainGenerator
     {
-        private const int NUM_QUADS = CHUNK_SIZE * CHUNK_SIZE;
+        private const int NUM_QUADS = CHUNK_WIDTH * CHUNK_WIDTH;
 
         Vertex[] vertices = new Vertex[NUM_QUADS * 4];
 
@@ -17,9 +20,9 @@ namespace Minecraft.Generator
             Vector3 offset = ChunkToWorldCoordinate(chunk.coordinate);
 
             int index = 0;
-            for(int x = 0; x < CHUNK_SIZE - 1; x++)
+            for(int x = 0; x < CHUNK_WIDTH - 1; x++)
             {
-                for(int z = 0; z < CHUNK_SIZE - 1; z++)
+                for(int z = 0; z < CHUNK_WIDTH - 1; z++)
                 {
                     Vector3 v1 = new Vector3(x, 0f, z + 1) + offset;
                     Vector3 v2 = new Vector3(x + 1, 0f, z + 1) + offset;

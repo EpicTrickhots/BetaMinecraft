@@ -1,16 +1,16 @@
-﻿using Minecraft.Core;
+﻿using System;
+using Minecraft.Core;
 using Minecraft.Core.Player;
 using Minecraft.Generator;
 using Minecraft.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System;
 
 namespace Minecraft.Screens
 {
     public class GameScreen : IScreen
     {
-        ChunkGenerator generator = new ChunkGenerator(new TestGenerator());
+        ChunkGenerator generator = new ChunkGenerator(new VoxelTerrainGenerator());
 
         PlayerController controller = new DebugController();
 
