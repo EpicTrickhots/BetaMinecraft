@@ -1,10 +1,13 @@
-﻿using Minecraft.Generator;
+﻿using Minecraft.Core.Player;
+using Minecraft.Generator;
 
 namespace Minecraft.Screens
 {
     public class GameScreen : IScreen
     {
         ChunkGenerator chunkGenerator = new ChunkGenerator(new TestGenerator());
+
+        PlayerController controller = new DebugController();
 
         public void Start()
         {
@@ -13,6 +16,7 @@ namespace Minecraft.Screens
 
         public void Update()
         {
+            chunkGenerator.viewPosition = controller.Position;
             chunkGenerator.Update();
         }
 

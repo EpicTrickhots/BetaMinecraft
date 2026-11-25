@@ -20,7 +20,7 @@ namespace Minecraft.Generator
         /// <summary>
         /// Position to base render distance off of
         /// </summary>
-        public Vector3 viewer;
+        public Vector3 viewPosition;
 
         /// <summary>
         /// Terrain generator that will handle mesh generation
@@ -56,7 +56,7 @@ namespace Minecraft.Generator
 
         public void Update()
         {
-            Vector3i cc = TerrainGenerator.WorldToChunkCoordinate(viewer);
+            Vector3i cc = TerrainGenerator.WorldToChunkCoordinate(viewPosition);
             if(cc != viewerChunk)
             {
                 viewerChunk = cc;
@@ -119,7 +119,7 @@ namespace Minecraft.Generator
                     Vector3 center = new Vector3(cx, 0f, cz);
 
                     float r = RENDER_DISTANCE * TerrainGenerator.CHUNK_SIZE;
-                    Vector3 viewerXZ = new Vector3(viewer.X, 0f, viewer.Z);
+                    Vector3 viewerXZ = new Vector3(viewPosition.X, 0f, viewPosition.Z);
 
                     if ((center - viewerXZ).LengthSquared > (r * r))
                         continue;
@@ -148,8 +148,8 @@ namespace Minecraft.Generator
                 Vector3 ac = TerrainGenerator.ChunkToWorldCoordinate(a) + 0.5f * TerrainGenerator.CHUNK_SIZE * Vector3.One;
                 Vector3 bc = TerrainGenerator.ChunkToWorldCoordinate(b) + 0.5f * TerrainGenerator.CHUNK_SIZE * Vector3.One;
 
-                float distanceA = (ac - viewer).LengthSquared;
-                float distanceB = (bc - viewer).LengthSquared;
+                float distanceA = (ac - viewPosition).LengthSquared;
+                float distanceB = (bc - viewPosition).LengthSquared;
 
                 return distanceA.CompareTo(distanceB);
             });
