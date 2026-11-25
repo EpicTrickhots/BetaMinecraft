@@ -1,10 +1,15 @@
-﻿namespace BetaMinecraft
+﻿using BetaMinecraft.Core;
+
+namespace BetaMinecraft
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            using(MinecraftWindow game = new MinecraftWindow())
+            {
+                game.Run();
+            }
         }
     }
 }
