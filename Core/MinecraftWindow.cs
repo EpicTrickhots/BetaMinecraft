@@ -1,4 +1,4 @@
-﻿using Minecraft..InputHandling;
+﻿using Minecraft.InputHandling;
 using Minecraft.Graphics;
 using Minecraft.Screens;
 using OpenTK.Graphics.OpenGL4;
@@ -44,6 +44,7 @@ namespace Minecraft.Core
 
             Input.keyboard = KeyboardState;
             Input.mouse = MouseState;
+
             screen.Update();
         }
 

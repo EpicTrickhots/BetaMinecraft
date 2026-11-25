@@ -112,7 +112,7 @@ namespace Minecraft.Graphics
         /// <summary>
         /// Shorthand for (0, 0, -1)
         /// </summary>
-        public Vector3 Forwards => (localRotation * -Vector3.UnitZ).Normalized();
+        public Vector3 Forward => (localRotation * -Vector3.UnitZ).Normalized();
 
         /// <summary>
         /// Shorthand for (1, 0, 0)
