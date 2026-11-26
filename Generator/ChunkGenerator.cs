@@ -31,7 +31,7 @@ namespace Minecraft.Generator
         /// <summary>
         /// Terrain generator that will handle mesh generation
         /// </summary>
-        public TerrainGenerator Generator { get; } = new TerrainGenerator(seed);
+        public BetaGenerator Generator { get; } = new BetaGenerator(seed);
 
         /// <summary>
         /// Chunk coordinate that the viewer is currently standing in

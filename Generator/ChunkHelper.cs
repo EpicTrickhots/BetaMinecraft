@@ -13,7 +13,7 @@ namespace Minecraft.Generator
         {
             int x = a.X << 4;
             int z = a.Z << 4;
-            return new Vector3i(x, 0f, z);
+            return new Vector3i(x, 0, z);
         }
 
         /// <summary>

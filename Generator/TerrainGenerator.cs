@@ -36,8 +36,10 @@ namespace Minecraft.Generator
             meshGenTimer = Stopwatch.StartNew();
             GenerateChunkMesh(offset);
             meshGenTimer.Stop();
+            
+            // Console.WriteLine($"({chunk.coordinate}) Voxel Gen ({noiseGenTimer.ElapsedMilliseconds}) Mesh Gen ({meshGenTimer.ElapsedMilliseconds})");
 
-            Console.WriteLine();
+            chunk.mesh = new ChunkMesh([.. vertices]);
         }
 
         private void GenerateNoiseValues(Vector3 offset)
@@ -49,7 +51,9 @@ namespace Minecraft.Generator
                 for (int i = range.Item1; i < range.Item2; i++)
                 {
                     Vector3i pos = IndexToVoxelPosition(i);
-                    voxels[i] = Noise.GetNoise(pos.X + offset.X, pos.Y, pos.Z + offset.Z);
+                    float noise = Noise.GetNoise(pos.X + offset.X, pos.Y, pos.Z + offset.Z);
+                    Console.WriteLine(noise);
+                    voxels[i] = noise;
                 }
             });
         }
@@ -104,7 +108,7 @@ namespace Minecraft.Generator
         /// </summary>
         /// <param name="index">Index to convert</param>
         /// <returns>A 3D vector representing a voxel in the current chunk</returns>
-        private static Vector3i IndexToVoxelPosition(int index)
+        public static Vector3i IndexToVoxelPosition(int index)
         {
             const int MASK_X = 15;
             const int MASK_Y = 255;
