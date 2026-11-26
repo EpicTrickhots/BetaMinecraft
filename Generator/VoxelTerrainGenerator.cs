@@ -21,6 +21,9 @@ namespace Minecraft.Generator
 
         private readonly float[] voxels = new float[VOXELS_PER_CHUNK];
 
+        private Stopwatch noiseGenTimer = null!;
+        private Stopwatch meshGenTimer = null!;
+
         private FastNoiseLite Noise { get; }
 
         public VoxelTerrainGenerator(int seed)
@@ -34,11 +37,20 @@ namespace Minecraft.Generator
 
         public void GenerateChunk(Chunk chunk)
         {
-            // Construct voxel noise values
-            Stopwatch timer = Stopwatch.StartNew();
-
             Vector3 offset = ChunkHelper.ChunkToWorldCoordinate(chunk.coordinate);
 
+            // Construct voxel noise values
+            noiseGenTimer = Stopwatch.StartNew();
+            GenerateNoiseValues(offset);
+            noiseGenTimer.Stop();
+
+            meshGenTimer = Stopwatch.StartNew();
+            GenerateChunkMesh();
+            meshGenTimer.Stop();
+        }
+
+        private void GenerateNoiseValues(Vector3 offset)
+        {
             OrderablePartitioner<Tuple<int, int>> rangePartitioner = Partitioner.Create(0, VOXELS_PER_CHUNK);
 
             Parallel.ForEach(rangePartitioner, range =>
@@ -54,9 +66,11 @@ namespace Minecraft.Generator
                     voxels[i] = Noise.GetNoise(x + offset.X, y, z + offset.Z);
                 }
             });
+        }
 
-            timer.Stop();
-            Console.WriteLine($"Voxel noise values generated in {timer.ElapsedMilliseconds} ms");
+        private void GenerateChunkMesh()
+        {
+
         }
     }
 }
