@@ -11,8 +11,8 @@ namespace Minecraft.Generator
         /// <returns>World-space position</returns>
         public static Vector3 ChunkToWorldCoordinate(Vector3i a)
         {
-            float x = a.X * (IGenerator.CHUNK_WIDTH - 1);
-            float z = a.Z * (IGenerator.CHUNK_WIDTH - 1);
+            float x = a.X << IGenerator.WIDTH_SHIFT;
+            float z = a.Z << IGenerator.WIDTH_SHIFT;
             return new Vector3(x, 0f, z);
         }
 
