@@ -65,6 +65,8 @@ namespace Minecraft.Generator
 
             vertices.Clear();
 
+            /*
+             * Multi-threaded approach *
             var partitioner = Partitioner.Create(0, VOXELS_PER_CHUNK);
 
             Parallel.ForEach(
@@ -100,6 +102,34 @@ namespace Minecraft.Generator
                     }
                 }
             );
+            */
+
+            for(int i = 0; i < VOXELS_PER_CHUNK; i++)
+            {
+                if (voxels[i] <= 0f)
+                    return;
+
+                Vector3i pos = IndexToVoxelPosition(i);
+
+                // Check this voxel's 6 neighboring values to determine which faces to draw
+                if (pos.X == 15 || voxels[i + 1] <= 0f) // +X face
+                    AppendFace(pos, 0);
+
+                if (pos.X == 0 || voxels[i - 1] <= 0f) // -X face
+                    AppendFace(pos, 1);
+
+                if (pos.Y == 255 || voxels[i + Y_STRIDE] <= 0f)
+                    AppendFace(pos, 2);
+
+                if (pos.Y == 0 || voxels[i - Y_STRIDE] <= 0f)
+                    AppendFace(pos, 3);
+
+                if (pos.Z == 15 || voxels[i + Z_STRIDE] <= 0f)
+                    AppendFace(pos, 4);
+
+                if (pos.Z == 0 || voxels[i - Z_STRIDE] <= 0f)
+                    AppendFace(pos, 5);
+            }
         }
 
         /// <summary>

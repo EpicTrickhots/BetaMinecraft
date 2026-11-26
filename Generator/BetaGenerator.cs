@@ -56,6 +56,8 @@ namespace Minecraft.Generator
 
         private void GenerateChunkMesh(Vector3 offset)
         {
+            const int Z_STRIDE = 1 << 12;
+            const int Y_STRIDE = 1 << 4;
             const float ISO = 0f;
 
             for(int x = 0; x < 16; x++)
@@ -68,13 +70,27 @@ namespace Minecraft.Generator
                         if (voxels[i] <= ISO)
                             return;
 
-                        Vector3 origin = offset + new Vector3i(x, y, z);
+                        // It is probably faster to use a 1D for() loop and then do the bit shifting from earlier to get x, y, and z.
+                        Vector3 pos = new Vector3i(x, y, z);
 
-                        if (x == 15 || voxels[i + 1] <= ISO)
-                            AppendFace(origin, 0);
+                        // Check this voxel's 6 neighboring values to determine which faces to draw
+                        if (x == 15 || voxels[i + 1] <= 0f) // +X face
+                            AppendFace(pos, 0);
 
-                        if (x == 0 || voxels[i - 1] <= ISO)
-                            AppendFace(origin, 1);
+                        if (x == 0 || voxels[i - 1] <= 0f) // -X face
+                            AppendFace(pos, 1);
+
+                        if (y == 255 || voxels[i + Y_STRIDE] <= 0f)
+                            AppendFace(pos, 2);
+
+                        if (y == 0 || voxels[i - Y_STRIDE] <= 0f)
+                            AppendFace(pos, 3);
+
+                        if (z == 15 || voxels[i + Z_STRIDE] <= 0f)
+                            AppendFace(pos, 4);
+
+                        if (z == 0 || voxels[i - Z_STRIDE] <= 0f)
+                            AppendFace(pos, 5);
                     }
                 }
             }
