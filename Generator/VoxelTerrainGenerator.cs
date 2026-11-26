@@ -17,10 +17,6 @@ namespace Minecraft.Generator
 
         public const int HEIGHT = 8;
 
-        public const int CHUNK_WIDTH = 1 << WIDTH;
-
-        public const int CHUNK_HEIGHT = 1 << HEIGHT;
-
         const int VOXELS_PER_CHUNK = WIDTH * HEIGHT * WIDTH;
 
         const int BIT_MASK_X = WIDTH - 1;
@@ -34,6 +30,8 @@ namespace Minecraft.Generator
         #endregion
 
         private readonly float[] voxels = new float[VOXELS_PER_CHUNK];
+
+        private readonly List<Vertex> vertices = new(1024 * 4);
 
         private Stopwatch noiseGenTimer = null!;
         private Stopwatch meshGenTimer = null!;
@@ -51,7 +49,7 @@ namespace Minecraft.Generator
 
         public void GenerateChunk(Chunk chunk)
         {
-            Vector3 offset = ChunkHelper.ChunkToWorldCoordinate(chunk.coordinate);
+            Vector3i offset = ChunkHelper.ChunkToWorldCoordinate(chunk.coordinate);
 
             // Construct voxel noise values
             noiseGenTimer = Stopwatch.StartNew();
@@ -59,7 +57,7 @@ namespace Minecraft.Generator
             noiseGenTimer.Stop();
 
             meshGenTimer = Stopwatch.StartNew();
-            GenerateChunkMesh();
+            GenerateChunkMesh(offset);
             meshGenTimer.Stop();
         }
 
@@ -82,18 +80,18 @@ namespace Minecraft.Generator
             });
         }
 
-        private void GenerateChunkMesh()
+        private void GenerateChunkMesh(Vector3 offset)
         {
             const int STRIDE_Y = 1 << WIDTH;
             const int STRIDE_Z = 1 << Z_SHIFT;
 
+            vertices.Clear();
+
             var partitioner = Partitioner.Create(0, VOXELS_PER_CHUNK);
-            var results = new ConcurrentBag<MeshBuffer>();
 
             Parallel.ForEach(
                 partitioner,
-                () => new MeshBuffer(),
-                (range, loop, buffer) =>
+                range =>
                 {
                     for (int i = range.Item1; i < range.Item2; i++)
                     {
@@ -101,45 +99,42 @@ namespace Minecraft.Generator
                             continue;
 
                         int x = i & BIT_MASK_X;
-                        int y = (i >> HEIGHT) & BIT_MASK_Y;
+                        int y = (i >> WIDTH) & BIT_MASK_Y;
                         int z = i >> Z_SHIFT;
 
-                        Vector3 origin = new Vector3(x, y, z);
+                        Vector3 origin = new Vector3(x, y, z) + offset;
 
                         // Check this voxel's 6 neighboring values to determine which faces to draw
                         if (x == BIT_MASK_X || voxels[i + 1] <= ISO_LEVEL) // +X face
-                            AppendFace(buffer, origin, 0);
+                            AppendFace(origin, 0);
 
                         if (x == 0 || voxels[i - 1] <= ISO_LEVEL) // -X face
-                            AppendFace(buffer, origin, 1);
+                            AppendFace(origin, 1);
 
-                        if (y == CHUNK_HEIGHT - 1 || voxels[i + STRIDE_Y] <= ISO_LEVEL)
-                            AppendFace(buffer, origin, 2);
+                        if (y == HEIGHT - 1 || voxels[i + STRIDE_Y] <= ISO_LEVEL)
+                            AppendFace(origin, 2);
 
                         if (y == 0 || voxels[i - STRIDE_Y] <= ISO_LEVEL)
-                            AppendFace(buffer, origin, 3);
+                            AppendFace(origin, 3);
 
-                        if (z == CHUNK_WIDTH - 1 || voxels[i + STRIDE_Z] <= ISO_LEVEL)
-                            AppendFace(buffer, origin, 4);
+                        if (z == WIDTH - 1 || voxels[i + STRIDE_Z] <= ISO_LEVEL)
+                            AppendFace(origin, 4);
 
                         if (z == 0 || voxels[i - STRIDE_Z] <= ISO_LEVEL)
-                            AppendFace(buffer, origin, 5);
+                            AppendFace(origin, 5);
                     }
-
-                    return buffer;
-                },
-                localBuffer => results.Add(localBuffer)
+                }
             );
         }
 
-        private void AppendFace(MeshBuffer buffer, Vector3 voxel, int faceIndex)
+        private void AppendFace(Vector3 voxel, int faceIndex)
         {
-            uint start = (uint)buffer.vertices.Count;
+            uint start = (uint)vertices.Count;
 
-            buffer.vertices.Add(new Vertex(voxel + faces[faceIndex, 0], new(1f, 0f)));
-            buffer.vertices.Add(new Vertex(voxel + faces[faceIndex, 1], new(1f, 1f)));
-            buffer.vertices.Add(new Vertex(voxel + faces[faceIndex, 2], new(0f, 1f)));
-            buffer.vertices.Add(new Vertex(voxel + faces[faceIndex, 3], new(0f, 0f)));
+            vertices.Add(new Vertex(voxel + faces[faceIndex, 0], new(1f, 0f)));
+            vertices.Add(new Vertex(voxel + faces[faceIndex, 1], new(1f, 1f)));
+            vertices.Add(new Vertex(voxel + faces[faceIndex, 2], new(0f, 1f)));
+            vertices.Add(new Vertex(voxel + faces[faceIndex, 3], new(0f, 0f)));
         }
 
         private static readonly Vector3[,] faces = new Vector3[6, 4]
@@ -162,11 +157,5 @@ namespace Minecraft.Generator
             // -Z
             { new(-0.5f, -0.5f, -0.5f), new(-0.5f, 0.5f, -0.5f), new(0.5f, 0.5f, -0.5f), new(0.5f, -0.5f, -0.5f) }
         };
-
-        private class MeshBuffer
-        {
-            public readonly List<Vertex> vertices = new(1024 * 4);
-            public readonly List<uint> indices = new(1024 * 6);
-        }
     }
 }

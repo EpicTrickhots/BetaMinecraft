@@ -9,11 +9,11 @@ namespace Minecraft.Generator
         /// </summary>
         /// <param name="a">Input chunk coordinate</param>
         /// <returns>World-space position</returns>
-        public static Vector3 ChunkToWorldCoordinate(Vector3i a)
+        public static Vector3i ChunkToWorldCoordinate(Vector3i a)
         {
-            float x = a.X << IGenerator.WIDTH_SHIFT;
-            float z = a.Z << IGenerator.WIDTH_SHIFT;
-            return new Vector3(x, 0f, z);
+            int x = a.X << IGenerator.WIDTH_SHIFT;
+            int z = a.Z << IGenerator.WIDTH_SHIFT;
+            return new Vector3i(x, 0f, z);
         }
 
         /// <summary>

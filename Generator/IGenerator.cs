@@ -2,8 +2,6 @@
 {
     public interface IGenerator
     {
-        
-
         /// <summary>
         /// Creates resources to be used for each chunk
         /// </summary>
