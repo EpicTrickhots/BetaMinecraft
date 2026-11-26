@@ -53,7 +53,7 @@ namespace Minecraft.Screens
                         return;
 
                     GL.BindVertexArray(chunk.mesh.VertexArrayObject);
-                    GL.DrawElements(PrimitiveType.Triangles, chunk.mesh.indices.Length, DrawElementsType.UnsignedInt, 0);
+                    GL.DrawElements(PrimitiveType.Triangles, chunk.mesh.IndexCount, DrawElementsType.UnsignedInt, 0);
                 }
             }
         }

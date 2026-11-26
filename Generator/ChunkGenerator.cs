@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Collections.Generic;
 using OpenTK.Mathematics;
+using Minecraft.Graphics;
 
 namespace Minecraft.Generator
 {
@@ -56,6 +57,7 @@ namespace Minecraft.Generator
 
         public void Initialize()
         {
+            ChunkMesh.CreateGlobalIndexBuffer();
             CalculateNeededChunks();
         }
 
