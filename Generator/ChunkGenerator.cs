@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using OpenTK.Mathematics;
 using Minecraft.Graphics;
+using System.Linq;
 
 namespace Minecraft.Generator
 {
@@ -92,9 +93,7 @@ namespace Minecraft.Generator
             Chunk chunk = new(coordinate);
             Generator.GenerateChunk(chunk);
 
-            if(!useFixedMap)
-                cachedChunks.Add(coordinate, chunk);
-
+            cachedChunks.Add(coordinate, chunk);
             renderedChunks.Add(coordinate);
         }
 
@@ -180,6 +179,12 @@ namespace Minecraft.Generator
 
         private void GenerateFixedMap()
         {
+            foreach(var chunk in cachedChunks)
+                chunk.Value.Dispose();
+
+            cachedChunks.Clear();
+            renderedChunks.Clear();
+
             int rad = fixedMapSize / 2;
 
             fixedMapGenerationTimer = Stopwatch.StartNew();
@@ -197,6 +202,14 @@ namespace Minecraft.Generator
 
             fixedMapGenerationTimer.Stop();
             Console.WriteLine($"Successfully generated {numChunks} chunks ({fixedMapGenerationTimer.ElapsedMilliseconds} ms)");
+
+            foreach (var chunk in cachedChunks)
+            {
+                if (chunk.Value.mesh == null)
+                    return;
+
+                Console.WriteLine(chunk.Value.mesh.vertices.Length);
+            }
         }
     }
 }

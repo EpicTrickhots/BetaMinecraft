@@ -1,9 +1,10 @@
-﻿using Minecraft.Graphics;
+﻿using System;
 using OpenTK.Mathematics;
+using Minecraft.Graphics;
 
 namespace Minecraft.Generator
 {
-    public class Chunk(Vector3i coordinate)
+    public class Chunk(Vector3i coordinate) : IDisposable
     {
         /// <summary>
         /// Chunk-space coordinate of this chunk
@@ -14,5 +15,19 @@ namespace Minecraft.Generator
         /// Mesh data that will be written to by the mesh generators
         /// </summary>
         public ChunkMesh? mesh;
+
+        private bool disposed = false;
+
+        public void Dispose()
+        {
+            if (disposed)
+                return;
+
+            mesh?.Dispose();
+            mesh = null;
+
+            disposed = true;
+            GC.SuppressFinalize(this);
+        }
     }
 }
