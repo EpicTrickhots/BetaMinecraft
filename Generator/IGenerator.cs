@@ -1,13 +1,10 @@
-﻿using Minecraft.Generator.Noise;
-using OpenTK.Mathematics;
-
-namespace Minecraft.Generator
+﻿namespace Minecraft.Generator
 {
     public interface IGenerator
     {
-        public const int CHUNK_WIDTH = 16;
+        public const int CHUNK_WIDTH = 1 << 4;
 
-        public const int CHUNK_HEIGHT = 256;
+        public const int CHUNK_HEIGHT = 1 << 8;
 
         /// <summary>
         /// Creates resources to be used for each chunk

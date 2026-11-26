@@ -10,7 +10,7 @@ namespace Minecraft.Screens
 {
     public class GameScreen : IScreen
     {
-        ChunkGenerator generator = new ChunkGenerator(new TestGenerator());
+        ChunkGenerator generator = new ChunkGenerator(new VoxelTerrainGenerator(2837));
 
         PlayerController controller = new DebugController();
 
