@@ -9,25 +9,11 @@ using OpenTK.Mathematics;
 
 namespace Minecraft.Generator
 {
-    public class VoxelTerrainGenerator : IGenerator
+    public class VoxelTerrainGenerator : TerrainGenerator
     {
-        #region Constants (Resolved at compile time)
+        const int VOXELS_PER_CHUNK = 16 * 256 * 16;
 
-        public const int WIDTH = 4;
-
-        public const int HEIGHT = 8;
-
-        const int VOXELS_PER_CHUNK = WIDTH * HEIGHT * WIDTH;
-
-        const int BIT_MASK_X = WIDTH - 1;
-
-        const int BIT_MASK_Y = HEIGHT - 1;
-
-        const int Z_SHIFT = WIDTH + HEIGHT;
-
-        const float ISO_LEVEL = 0f;
-
-        #endregion
+        const int Z_SHIFT = 12;
 
         private readonly float[] voxels = new float[VOXELS_PER_CHUNK];
 
@@ -45,9 +31,14 @@ namespace Minecraft.Generator
             // Set settings
         }
 
-        public void CreateResources() { }
+        public override void CreateResources()
+        {
+            // Create largest possible index array for a chunk
 
-        public void GenerateChunk(Chunk chunk)
+
+        }
+
+        public override void GenerateChunk(Chunk chunk)
         {
             Vector3i offset = ChunkHelper.ChunkToWorldCoordinate(chunk.coordinate);
 
@@ -59,6 +50,8 @@ namespace Minecraft.Generator
             meshGenTimer = Stopwatch.StartNew();
             GenerateChunkMesh(offset);
             meshGenTimer.Stop();
+
+            Console.WriteLine();
         }
 
         private void GenerateNoiseValues(Vector3 offset)
@@ -69,21 +62,16 @@ namespace Minecraft.Generator
             {
                 for (int i = range.Item1; i < range.Item2; i++)
                 {
-                    // Since our chunk dimensions are powers of 2,
-                    // we can use super fast bit-wise operators to un-flatten our index
-                    int x = i & BIT_MASK_X;
-                    int y = (i >> WIDTH) & BIT_MASK_Y;
-                    int z = i >> Z_SHIFT;
-
-                    voxels[i] = Noise.GetNoise(x + offset.X, y, z + offset.Z);
+                    Vector3i pos = IndexToVoxelPosition(i);
+                    voxels[i] = Noise.GetNoise(pos.X + offset.X, pos.Y, pos.Z + offset.Z);
                 }
             });
         }
 
         private void GenerateChunkMesh(Vector3 offset)
         {
-            const int STRIDE_Y = 1 << WIDTH;
-            const int STRIDE_Z = 1 << Z_SHIFT;
+            const int Z_STRIDE = 1 << Z_SHIFT;
+            const int Y_STRIDE = 1 << 4;
 
             vertices.Clear();
 
@@ -95,42 +83,54 @@ namespace Minecraft.Generator
                 {
                     for (int i = range.Item1; i < range.Item2; i++)
                     {
-                        if (voxels[i] <= ISO_LEVEL)
+                        // Voxel value is negative -> air block
+                        if (voxels[i] <= 0f)
                             continue;
 
-                        int x = i & BIT_MASK_X;
-                        int y = (i >> WIDTH) & BIT_MASK_Y;
-                        int z = i >> Z_SHIFT;
-
-                        Vector3 origin = new Vector3(x, y, z) + offset;
+                        Vector3i pos = IndexToVoxelPosition(i);
+                        Vector3 origin = pos + offset;
 
                         // Check this voxel's 6 neighboring values to determine which faces to draw
-                        if (x == BIT_MASK_X || voxels[i + 1] <= ISO_LEVEL) // +X face
+                        if (pos.X == 15 || voxels[i + 1] <= 0f) // +X face
                             AppendFace(origin, 0);
 
-                        if (x == 0 || voxels[i - 1] <= ISO_LEVEL) // -X face
+                        if (pos.X == 0 || voxels[i - 1] <= 0f) // -X face
                             AppendFace(origin, 1);
 
-                        if (y == HEIGHT - 1 || voxels[i + STRIDE_Y] <= ISO_LEVEL)
+                        if (pos.Y == 255 || voxels[i + Y_STRIDE] <= 0f)
                             AppendFace(origin, 2);
 
-                        if (y == 0 || voxels[i - STRIDE_Y] <= ISO_LEVEL)
+                        if (pos.Y == 0 || voxels[i - Y_STRIDE] <= 0f)
                             AppendFace(origin, 3);
 
-                        if (z == WIDTH - 1 || voxels[i + STRIDE_Z] <= ISO_LEVEL)
+                        if (pos.Z == 15 || voxels[i + Z_STRIDE] <= 0f)
                             AppendFace(origin, 4);
 
-                        if (z == 0 || voxels[i - STRIDE_Z] <= ISO_LEVEL)
+                        if (pos.Z == 0 || voxels[i - Z_STRIDE] <= 0f)
                             AppendFace(origin, 5);
                     }
                 }
             );
         }
 
+        /// <summary>
+        /// Since we hard-code our chunk dimensions to power of two, we can use bit-wise operators to speed up this calculations :)
+        /// </summary>
+        /// <param name="index">Index to convert</param>
+        /// <returns>A 3D vector representing a voxel in the current chunk</returns>
+        private static Vector3i IndexToVoxelPosition(int index)
+        {
+            const int MASK_X = 15;
+            const int MASK_Y = 255;
+
+            int x = index & MASK_X;
+            int y = (index >> 4) & MASK_Y;
+            int z = index >> Z_SHIFT;
+            return new Vector3i(x, y, z);
+        }
+
         private void AppendFace(Vector3 voxel, int faceIndex)
         {
-            uint start = (uint)vertices.Count;
-
             vertices.Add(new Vertex(voxel + faces[faceIndex, 0], new(1f, 0f)));
             vertices.Add(new Vertex(voxel + faces[faceIndex, 1], new(1f, 1f)));
             vertices.Add(new Vertex(voxel + faces[faceIndex, 2], new(0f, 1f)));

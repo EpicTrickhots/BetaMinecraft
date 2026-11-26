@@ -8,9 +8,9 @@ using OpenTK.Mathematics;
 
 namespace Minecraft.Generator
 {
-    public class TestGenerator : IGenerator
+    public class TestGenerator : TerrainGenerator
     {
-        private const int NUM_QUADS = IGenerator.CHUNK_WIDTH * IGenerator.CHUNK_WIDTH;
+        private const int NUM_QUADS = TerrainGenerator.CHUNK_WIDTH * TerrainGenerator.CHUNK_WIDTH;
 
         Vertex[] vertices = new Vertex[NUM_QUADS * 4];
 
@@ -21,9 +21,9 @@ namespace Minecraft.Generator
             Vector3 offset = ChunkHelper.ChunkToWorldCoordinate(chunk.coordinate);
 
             int index = 0;
-            for(int x = 0; x < IGenerator.CHUNK_WIDTH - 1; x++)
+            for(int x = 0; x < TerrainGenerator.CHUNK_WIDTH - 1; x++)
             {
-                for(int z = 0; z < IGenerator.CHUNK_WIDTH - 1; z++)
+                for(int z = 0; z < TerrainGenerator.CHUNK_WIDTH - 1; z++)
                 {
                     Vector3 v1 = new Vector3(x, 0f, z + 1) + offset;
                     Vector3 v2 = new Vector3(x + 1, 0f, z + 1) + offset;

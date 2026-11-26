@@ -11,8 +11,8 @@ namespace Minecraft.Generator
         /// <returns>World-space position</returns>
         public static Vector3i ChunkToWorldCoordinate(Vector3i a)
         {
-            int x = a.X << IGenerator.WIDTH_SHIFT;
-            int z = a.Z << IGenerator.WIDTH_SHIFT;
+            int x = a.X << TerrainGenerator.WIDTH_SHIFT;
+            int z = a.Z << TerrainGenerator.WIDTH_SHIFT;
             return new Vector3i(x, 0f, z);
         }
 
@@ -23,8 +23,8 @@ namespace Minecraft.Generator
         /// <returns>Chunk coordinate</returns>
         public static Vector3i WorldToChunkCoordinate(Vector3 a)
         {
-            int x = (int)MathHelper.Floor(a.X / IGenerator.CHUNK_WIDTH);
-            int z = (int)MathHelper.Floor(a.Z / IGenerator.CHUNK_WIDTH);
+            int x = (int)MathHelper.Floor(a.X / TerrainGenerator.CHUNK_WIDTH);
+            int z = (int)MathHelper.Floor(a.Z / TerrainGenerator.CHUNK_WIDTH);
             return new Vector3i(x, 0, z);
         }
     }

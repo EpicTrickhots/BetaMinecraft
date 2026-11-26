@@ -1,22 +1,32 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using System;
 using System.Runtime.CompilerServices;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Minecraft.Graphics
 {
-    public class ChunkMesh
+    public class ChunkMesh : IDisposable
     {
-        public Vertex[] vertices;
+        public static int GlobalElementBufferObject { get; private set; }
 
-        public uint[] indices;
+        public Vertex[] vertices;
 
         public int VertexBufferObject { get; private set; }
         public int VertexArrayObject { get; private set; }
-        public int ElementBufferObject { get; private set; }
+        public int IndexCount { get; private set; }
 
-        public ChunkMesh(Vertex[] vertices, uint[] indices)
+        bool disposed = false;
+
+        public static void CreateGlobalIndexBuffer()
+        {
+            if (GlobalElementBufferObject != 0)
+                return;
+
+            // Create global index buffer
+        }
+
+        public ChunkMesh(Vertex[] vertices)
         {
             this.vertices = vertices;
-            this.indices = indices;
 
             int stride = Unsafe.SizeOf<Vertex>();
 
@@ -27,10 +37,6 @@ namespace Minecraft.Graphics
             GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferObject);
             GL.BufferData(BufferTarget.ArrayBuffer, vertices.Length * stride, vertices, BufferUsageHint.StaticDraw);
 
-            ElementBufferObject = GL.GenBuffer();
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferObject);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, indices.Length * sizeof(uint), indices, BufferUsageHint.StaticDraw);
-
             // POSITION
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, stride, 0);
             GL.EnableVertexAttribArray(0);
@@ -40,6 +46,25 @@ namespace Minecraft.Graphics
             GL.EnableVertexAttribArray(1);
 
             GL.BindVertexArray(0);
+        }
+
+        public void Dispose()
+        {
+            if (disposed)
+                return;
+
+            GL.BindVertexArray(0);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+
+            GL.DeleteVertexArray(VertexArrayObject);
+            GL.DeleteBuffer(VertexBufferObject);
+
+            VertexArrayObject = 0;
+            VertexBufferObject = 0;
+            vertices = null!;
+
+            disposed = true;
+            GC.SuppressFinalize(this);
         }
     }
 }
