@@ -32,7 +32,7 @@ namespace Minecraft.Generator
         /// <summary>
         /// Terrain generator that will handle mesh generation
         /// </summary>
-        public BetaGenerator Generator { get; } = new BetaGenerator(seed);
+        public TerrainGenerator Generator { get; } = new TerrainGenerator(seed);
 
         /// <summary>
         /// Chunk coordinate that the viewer is currently standing in
@@ -208,7 +208,7 @@ namespace Minecraft.Generator
                 if (chunk.Value.mesh == null)
                     return;
 
-                Console.WriteLine(chunk.Value.mesh.vertices.Length);
+                Console.WriteLine(chunk.Value.mesh.IndexCount);
             }
         }
     }

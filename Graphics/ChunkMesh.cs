@@ -16,7 +16,7 @@ namespace Minecraft.Graphics
         const int MAX_QUADS_PER_CHUNK = 16 * 256 * 16 / 2 * 6;
         const int MAX_INDICES_PER_CHUNK = MAX_QUADS_PER_CHUNK * 6;
 
-        public static int GlobalElementBufferObject { get; private set; }
+        public static int GlobalElementBufferObject { get; private set; } = 0;
 
         public Vertex[] vertices;
 

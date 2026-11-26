@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using Minecraft.Graphics;
 using Minecraft.Generator.Noise;
 using OpenTK.Mathematics;
+using System.Runtime.CompilerServices;
 
 namespace Minecraft.Generator
 {
@@ -17,7 +18,7 @@ namespace Minecraft.Generator
 
         private readonly float[] voxels = new float[VOXELS_PER_CHUNK];
 
-        private readonly List<Vertex> vertices = new List<Vertex>(4096);
+        private readonly List<Vertex> vertices = new List<Vertex>(32768);
 
         private Stopwatch noiseGenTimer = null!;
         private Stopwatch meshGenTimer = null!;
@@ -52,7 +53,6 @@ namespace Minecraft.Generator
                 {
                     Vector3i pos = IndexToVoxelPosition(i);
                     float noise = Noise.GetNoise(pos.X + offset.X, pos.Y, pos.Z + offset.Z);
-                    Console.WriteLine(noise);
                     voxels[i] = noise;
                 }
             });
@@ -78,26 +78,25 @@ namespace Minecraft.Generator
                             continue;
 
                         Vector3i pos = IndexToVoxelPosition(i);
-                        Vector3 origin = pos + offset;
 
                         // Check this voxel's 6 neighboring values to determine which faces to draw
                         if (pos.X == 15 || voxels[i + 1] <= 0f) // +X face
-                            AppendFace(origin, 0);
+                            AppendFace(pos, 0);
 
                         if (pos.X == 0 || voxels[i - 1] <= 0f) // -X face
-                            AppendFace(origin, 1);
+                            AppendFace(pos, 1);
 
                         if (pos.Y == 255 || voxels[i + Y_STRIDE] <= 0f)
-                            AppendFace(origin, 2);
+                            AppendFace(pos, 2);
 
                         if (pos.Y == 0 || voxels[i - Y_STRIDE] <= 0f)
-                            AppendFace(origin, 3);
+                            AppendFace(pos, 3);
 
                         if (pos.Z == 15 || voxels[i + Z_STRIDE] <= 0f)
-                            AppendFace(origin, 4);
+                            AppendFace(pos, 4);
 
                         if (pos.Z == 0 || voxels[i - Z_STRIDE] <= 0f)
-                            AppendFace(origin, 5);
+                            AppendFace(pos, 5);
                     }
                 }
             );
@@ -108,6 +107,7 @@ namespace Minecraft.Generator
         /// </summary>
         /// <param name="index">Index to convert</param>
         /// <returns>A 3D vector representing a voxel in the current chunk</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3i IndexToVoxelPosition(int index)
         {
             const int MASK_X = 15;
@@ -119,6 +119,7 @@ namespace Minecraft.Generator
             return new Vector3i(x, y, z);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AppendFace(Vector3 voxel, int faceIndex)
         {
             vertices.Add(new Vertex(voxel + faces[faceIndex, 0], new(1f, 0f)));
