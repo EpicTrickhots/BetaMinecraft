@@ -13,6 +13,6 @@ namespace Minecraft.Generator
         /// <summary>
         /// Mesh data that will be written to by the mesh generators
         /// </summary>
-        public Mesh? mesh;
+        public ChunkMesh? mesh;
     }
 }

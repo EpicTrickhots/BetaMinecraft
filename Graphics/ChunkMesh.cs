@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace Minecraft.Graphics
 {
-    public class Mesh
+    public class ChunkMesh
     {
         public Vertex[] vertices;
 
@@ -13,7 +13,7 @@ namespace Minecraft.Graphics
         public int VertexArrayObject { get; private set; }
         public int ElementBufferObject { get; private set; }
 
-        public Mesh(Vertex[] vertices, uint[] indices)
+        public ChunkMesh(Vertex[] vertices, uint[] indices)
         {
             this.vertices = vertices;
             this.indices = indices;

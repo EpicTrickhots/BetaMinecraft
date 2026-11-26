@@ -39,7 +39,7 @@ namespace Minecraft.Generator
                 }
             }
 
-            chunk.mesh = new Mesh(vertices, indices);
+            chunk.mesh = new ChunkMesh(vertices, indices);
         }
 
         public void CreateResources()
