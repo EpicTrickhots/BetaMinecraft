@@ -13,11 +13,6 @@ namespace Minecraft.Generator
 
         }
 
-        public void ReleaseResources()
-        {
-
-        }
-
         public void GenerateChunk(Chunk chunk)
         {
 

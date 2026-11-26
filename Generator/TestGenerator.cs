@@ -57,10 +57,5 @@ namespace Minecraft.Generator
                 indices[qi + 5] = qv + 0;
             }
         }
-
-        public void ReleaseResources()
-        {
-            
-        }
     }
 }

@@ -10,14 +10,9 @@ namespace Minecraft.Generator
         public const int CHUNK_HEIGHT = 256;
 
         /// <summary>
-        /// Creates GPU buffers to be used for each chunk
+        /// Creates resources to be used for each chunk
         /// </summary>
         public void CreateResources();
-
-        /// <summary>
-        /// Releases our GPU buffers to avoid memory leaks
-        /// </summary>
-        public void ReleaseResources();
 
         /// <summary>
         /// Generates a chunk at a given chunk coordinate

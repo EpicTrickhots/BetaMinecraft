@@ -67,11 +67,6 @@ namespace Minecraft.Generator
             RequestChunkUpdate();
         }
 
-        public void CleanUp()
-        {
-            Generator.ReleaseResources();
-        }
-
         private void CreateChunk(Vector3i coordinate)
         {
             Chunk chunk = new(coordinate);
