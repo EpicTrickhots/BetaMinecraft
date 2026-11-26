@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Minecraft.Generator
 {
-    internal class ChunkGenerator(TerrainGenerator generator)
+    internal class ChunkGenerator(int seed)
     {
         /// <summary>
         /// Radius of the rendered chunk circle around the viewer
@@ -18,6 +18,11 @@ namespace Minecraft.Generator
         public const int MAX_CHUNKS_PER_UPDATE = 2;
 
         /// <summary>
+        /// Random seed that will be used for RNG for everything in this world
+        /// </summary>
+        public int Seed { get; } = seed;
+
+        /// <summary>
         /// Position to base render distance off of
         /// </summary>
         public Vector3 viewPosition;
@@ -25,7 +30,7 @@ namespace Minecraft.Generator
         /// <summary>
         /// Terrain generator that will handle mesh generation
         /// </summary>
-        public TerrainGenerator Generator { get; } = generator;
+        public TerrainGenerator Generator { get; } = new TerrainGenerator(seed);
 
         /// <summary>
         /// Chunk coordinate that the viewer is currently standing in
@@ -51,7 +56,6 @@ namespace Minecraft.Generator
 
         public void Initialize()
         {
-            Generator.CreateResources();
             CalculateNeededChunks();
         }
 
@@ -109,12 +113,12 @@ namespace Minecraft.Generator
                 {
                     Vector3i coordinate = viewerChunk + new Vector3i(dx, 0, dz);
 
-                    float cx = (coordinate.X + 0.5f) * TerrainGenerator.CHUNK_WIDTH;
-                    float cz = (coordinate.Z + 0.5f) * TerrainGenerator.CHUNK_WIDTH;
+                    float cx = (coordinate.X + 0.5f) * 16;
+                    float cz = (coordinate.Z + 0.5f) * 16;
 
                     Vector3 center = new Vector3(cx, 0f, cz);
 
-                    float r = RENDER_DISTANCE * TerrainGenerator.CHUNK_WIDTH;
+                    float r = RENDER_DISTANCE * 16;
                     Vector3 viewerXZ = new Vector3(viewPosition.X, 0f, viewPosition.Z);
 
                     if ((center - viewerXZ).LengthSquared > (r * r))
@@ -141,8 +145,8 @@ namespace Minecraft.Generator
             // Sort chunk queue by distance to viewer so closer chunks are rendered first
             temp.Sort((a, b) =>
             {
-                Vector3 ac = ChunkHelper.ChunkToWorldCoordinate(a) + 0.5f * TerrainGenerator.CHUNK_WIDTH * Vector3.One;
-                Vector3 bc = ChunkHelper.ChunkToWorldCoordinate(b) + 0.5f * TerrainGenerator.CHUNK_WIDTH * Vector3.One;
+                Vector3 ac = ChunkHelper.ChunkToWorldCoordinate(a) + 0.5f * 16 * Vector3.One;
+                Vector3 bc = ChunkHelper.ChunkToWorldCoordinate(b) + 0.5f * 16 * Vector3.One;
 
                 float distanceA = (ac - viewPosition).LengthSquared;
                 float distanceB = (bc - viewPosition).LengthSquared;
