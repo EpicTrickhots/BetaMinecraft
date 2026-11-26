@@ -6,7 +6,7 @@ using Minecraft.Graphics;
 
 namespace Minecraft.Generator
 {
-    internal class ChunkGenerator(int seed)
+    internal class ChunkGenerator(int seed, bool useFixedMap = false, int fixedMapSize = 8)
     {
         /// <summary>
         /// Radius of the rendered chunk circle around the viewer
@@ -53,16 +53,30 @@ namespace Minecraft.Generator
         /// </summary>
         public readonly Queue<Vector3i> generationQueue = [];
 
-        //private Stopwatch debugTimer;
+        private bool useFixedMap = useFixedMap;
+
+        private int fixedMapSize = fixedMapSize;
+
+        private Stopwatch fixedMapGenerationTimer = null!;
 
         public void Initialize()
         {
             ChunkMesh.CreateGlobalIndexBuffer();
+
+            if (useFixedMap)
+            {
+                GenerateFixedMap();
+                return;
+            }
+
             CalculateNeededChunks();
         }
 
         public void Update()
         {
+            if (useFixedMap)
+                return;
+
             Vector3i cc = ChunkHelper.WorldToChunkCoordinate(viewPosition);
             if(cc != viewerChunk)
             {
@@ -78,7 +92,9 @@ namespace Minecraft.Generator
             Chunk chunk = new(coordinate);
             Generator.GenerateChunk(chunk);
 
-            cachedChunks.Add(coordinate, chunk);
+            if(!useFixedMap)
+                cachedChunks.Add(coordinate, chunk);
+
             renderedChunks.Add(coordinate);
         }
 
@@ -160,6 +176,27 @@ namespace Minecraft.Generator
             {
                 generationQueue.Enqueue(temp[i]);
             }
+        }
+
+        private void GenerateFixedMap()
+        {
+            int rad = fixedMapSize / 2;
+
+            fixedMapGenerationTimer = Stopwatch.StartNew();
+
+            int numChunks = 0;
+            for(int x = -rad; x < rad; x++)
+            {
+                for(int z = -rad; z < rad; z++)
+                {
+                    Vector3i coordinate = new Vector3i(x, 0, z);
+                    CreateChunk(coordinate);
+                    numChunks++;
+                }
+            }
+
+            fixedMapGenerationTimer.Stop();
+            Console.WriteLine($"Successfully generated {numChunks} chunks ({fixedMapGenerationTimer.ElapsedMilliseconds} ms)");
         }
     }
 }
