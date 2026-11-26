@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using Minecraft.Generator.Noise;
+using OpenTK.Mathematics;
 
 namespace Minecraft.Generator
 {

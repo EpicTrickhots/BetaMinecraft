@@ -3,17 +3,27 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Minecraft.Graphics;
+using Minecraft.Generator.Noise;
 using OpenTK.Mathematics;
 
 namespace Minecraft.Generator
 {
     public class VoxelTerrainGenerator : TerrainGenerator
     {
+        public const int SEED = 83465;
+
         private const int NUM_QUADS = CHUNK_WIDTH * CHUNK_WIDTH;
+
+        public FastNoiseLite Noise { get; }
 
         Vertex[] vertices = new Vertex[NUM_QUADS * 4];
 
         private uint[] indices = new uint[NUM_QUADS * 6];
+
+        public VoxelTerrainGenerator()
+        {
+            Noise = new FastNoiseLite(SEED);
+        }
 
         public override void GenerateChunkMesh(Chunk chunk)
         {
