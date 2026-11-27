@@ -52,6 +52,8 @@ namespace Minecraft.Screens
                     if (chunk.mesh == null)
                         return;
 
+                    GL.UniformMatrix4(shader.uniformLocations["uModel"], true, ref chunk.worldMatrix);
+
                     GL.BindVertexArray(chunk.mesh.VertexArrayObject);
                     GL.DrawElements(PrimitiveType.Triangles, chunk.mesh.IndexCount, DrawElementsType.UnsignedInt, 0);
                 }

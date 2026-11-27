@@ -11,6 +11,8 @@ namespace Minecraft.Generator
         /// </summary>
         public Vector3i coordinate = coordinate;
 
+        public Matrix4 worldMatrix = Matrix4.CreateTranslation(ChunkHelper.ChunkToWorldCoordinate(coordinate));
+
         /// <summary>
         /// Mesh data that will be written to by the mesh generators
         /// </summary>

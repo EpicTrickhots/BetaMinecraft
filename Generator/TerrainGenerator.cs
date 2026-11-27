@@ -14,8 +14,6 @@ namespace Minecraft.Generator
     {
         const int VOXELS_PER_CHUNK = 16 * 256 * 16;
 
-        const int Z_SHIFT = 12;
-
         private readonly float[] voxels = new float[VOXELS_PER_CHUNK];
 
         private readonly List<Vertex> vertices = new List<Vertex>(32768);
@@ -35,10 +33,10 @@ namespace Minecraft.Generator
             noiseGenTimer.Stop();
 
             meshGenTimer = Stopwatch.StartNew();
-            GenerateChunkMesh(offset);
+            GenerateChunkMesh();
             meshGenTimer.Stop();
             
-            // Console.WriteLine($"({chunk.coordinate}) Voxel Gen ({noiseGenTimer.ElapsedMilliseconds}) Mesh Gen ({meshGenTimer.ElapsedMilliseconds})");
+            Console.WriteLine($"({chunk.coordinate}) Voxel Gen ({noiseGenTimer.ElapsedMilliseconds}) Mesh Gen ({meshGenTimer.ElapsedMilliseconds})");
 
             chunk.mesh = new ChunkMesh([.. vertices]);
         }
@@ -58,77 +56,39 @@ namespace Minecraft.Generator
             });
         }
 
-        private void GenerateChunkMesh(Vector3 offset)
+        private void GenerateChunkMesh()
         {
-            const int Z_STRIDE = 1 << Z_SHIFT;
+            const float ISO = 0f;
+            const int X_STRIDE = 1 << 12;
             const int Y_STRIDE = 1 << 4;
+            const int Z_STRIDE = 1;
 
             vertices.Clear();
-
-            /*
-             * Multi-threaded approach *
-            var partitioner = Partitioner.Create(0, VOXELS_PER_CHUNK);
-
-            Parallel.ForEach(
-                partitioner,
-                range =>
-                {
-                    for (int i = range.Item1; i < range.Item2; i++)
-                    {
-                        // Voxel value is negative -> air block
-                        if (voxels[i] <= 0f)
-                            continue;
-
-                        Vector3i pos = IndexToVoxelPosition(i);
-
-                        // Check this voxel's 6 neighboring values to determine which faces to draw
-                        if (pos.X == 15 || voxels[i + 1] <= 0f) // +X face
-                            AppendFace(pos, 0);
-
-                        if (pos.X == 0 || voxels[i - 1] <= 0f) // -X face
-                            AppendFace(pos, 1);
-
-                        if (pos.Y == 255 || voxels[i + Y_STRIDE] <= 0f)
-                            AppendFace(pos, 2);
-
-                        if (pos.Y == 0 || voxels[i - Y_STRIDE] <= 0f)
-                            AppendFace(pos, 3);
-
-                        if (pos.Z == 15 || voxels[i + Z_STRIDE] <= 0f)
-                            AppendFace(pos, 4);
-
-                        if (pos.Z == 0 || voxels[i - Z_STRIDE] <= 0f)
-                            AppendFace(pos, 5);
-                    }
-                }
-            );
-            */
 
             for(int i = 0; i < VOXELS_PER_CHUNK; i++)
             {
                 if (voxels[i] <= 0f)
-                    return;
+                    continue;
 
                 Vector3i pos = IndexToVoxelPosition(i);
 
-                // Check this voxel's 6 neighboring values to determine which faces to draw
-                if (pos.X == 15 || voxels[i + 1] <= 0f) // +X face
-                    AppendFace(pos, 0);
+                if (pos.X == 15 || voxels[i + X_STRIDE] <= ISO)
+                    AppendFace(in pos, 0);
 
-                if (pos.X == 0 || voxels[i - 1] <= 0f) // -X face
-                    AppendFace(pos, 1);
+                if (pos.X == 0 || voxels[i - X_STRIDE] <= ISO)
+                    AppendFace(in pos, 1);
 
-                if (pos.Y == 255 || voxels[i + Y_STRIDE] <= 0f)
-                    AppendFace(pos, 2);
+                if (pos.Y == 255 || voxels[i + Y_STRIDE] <= ISO)
+                    AppendFace(in pos, 2);
 
-                if (pos.Y == 0 || voxels[i - Y_STRIDE] <= 0f)
-                    AppendFace(pos, 3);
+                if (pos.Y == 0 || voxels[i - Y_STRIDE] <= ISO)
+                    AppendFace(in pos, 3);
 
-                if (pos.Z == 15 || voxels[i + Z_STRIDE] <= 0f)
-                    AppendFace(pos, 4);
+                if (pos.Z == 15 || voxels[i + Z_STRIDE] <= ISO)
+                    AppendFace(in pos, 4);
 
-                if (pos.Z == 0 || voxels[i - Z_STRIDE] <= 0f)
-                    AppendFace(pos, 5);
+                if (pos.Z == 0 || voxels[i - Z_STRIDE] <= ISO)
+                    AppendFace(in pos, 5);
             }
         }
 
@@ -140,17 +100,16 @@ namespace Minecraft.Generator
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Vector3i IndexToVoxelPosition(int index)
         {
-            const int MASK_X = 15;
-            const int MASK_Y = 255;
+            const int MASK = 15;
 
-            int x = index & MASK_X;
-            int y = (index >> 4) & MASK_Y;
-            int z = index >> Z_SHIFT;
+            int x = index >> 12;
+            int y = (index >> 4) & 255;
+            int z = index & MASK;
             return new Vector3i(x, y, z);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AppendFace(Vector3 voxel, int faceIndex)
+        private void AppendFace(in Vector3i voxel, int faceIndex)
         {
             vertices.Add(new Vertex(voxel + faces[faceIndex, 0], new(1f, 0f)));
             vertices.Add(new Vertex(voxel + faces[faceIndex, 1], new(1f, 1f)));
